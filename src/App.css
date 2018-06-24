@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'overseer';
+  font-style: normal;
+  font-weight: normal;
+  src: local('overseer'), url('overseer.woff') format('woff');
+}
+
+h1 {
+  font-family: 'overseer';
+  font-weight: 200;
+  color: #424C23;
+}
