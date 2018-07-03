@@ -6,42 +6,36 @@ import Scroll from '../components/Scroll';
 import ErrorBoundry from '../components/ErrorBoundry';
 import './App.css';
 
-import {setSearchField} from '../actions';
+import {setSearchField, requestMutants} from '../actions';
 
 const mapStateToProps = state =>{
   return {
-    searchfield: state.searchfield
+    searchfield: state.searchMutants.searchfield,
+    mutants: state.requestMutants.mutants,
+    isPending: state.requestMutants.isPending,
+    error: state.requestMutants.error
   }
 }
 
 const mapDispatchtoProps = (dispatch) =>{
   return {
-      onSearchChange: (event) => dispatch(setSearchField(event.target.value))
+      onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+      onRequestMutants: () => dispatch(requestMutants())
   }
 }
 
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      mutants: []
-    }
-  }
-
+  
   componentDidMount(){
-    fetch('https://my-json-server.typicode.com/willhcurry/mutants/mutants')
-      .then(response => response.json())
-      .then(mutants => this.setState({mutants: mutants}));
-
+    this.props.onRequestMutants();
   }
 
   render() {
-    const {mutants} = this.state;
-    const {searchfield, onSearchChange} = this.props;
+    const {searchfield, onSearchChange, mutants, isPending} = this.props;
     const filteredMutants = mutants.filter(mutant => {
       return mutant.name.toLowerCase().includes(searchfield.toLowerCase());
     })
-    return !mutants.length ?
+    return isPending ?
       <h1 className="tc">Loading..</h1> :
       (
         <div className='tc'>
